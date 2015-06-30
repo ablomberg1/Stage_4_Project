@@ -6,7 +6,7 @@ from google.appengine.ext import ndb
 
 #to initialize jinja
 #directory that my current file is in os.path.dirname(__file__)
-template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+template_dir = os.path.join(os.path.dirname('index_Stage4.html'), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader (template_dir),
   autoescape = True)
 
@@ -29,29 +29,42 @@ class Handler(webapp2.RequestHandler):
 
 class MainPage(Handler):
   def get(self):
-    # error = self.request.get('error','') 
-     
-    query = Message.query().order(Message.date)
+    error = self.request.get('error','') 
+    comment = self.request.get_all('comment') 
+
+    #Create key
+    comment_key = ndb.Key('MainPage','message_page')
+
+    message_page = Message(comment='')
+    message_query = Message.query(ancestor=comment_key).order(Message.date)
+
+    query=Message.query().order(Message.date)
     message_list = query.fetch()
 
-    self.render("form.html", message_list=message_list)
-    message = message_list
-    # self.response.out.write(message)
-
+    self.render("form.html", comment=message_list, error=error)
+  
+ 
   def post(self):
-    # date = self.request.get('date')
+
+    pull_posts=5
+    query=Message.query()
+    page_comments = query.fetch(pull_posts)
+
+    
     comment = self.request.get('comment')
+    #
+ 
 
     # if either of the fields (link or comment) is blank
     if comment:
-        message = Message(comment=comment)
-        message.put()
+        message_page = Message(comment=comment)
+        message_page.content = self.request.get('comment')
+        message_page.put()
         import time
         time.sleep(.1)
-        self.redirect('/')
-        self.response.out.write(message)
+        self.redirect('/')        
     else:
-      self.response.out.write('Please leave a comment!') 
+      self.redirect('/?error=Please leave a comment!') 
 
 app = webapp2.WSGIApplication([('/', MainPage),
 ], debug=True)
