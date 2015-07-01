@@ -31,13 +31,8 @@ class MainPage(Handler):
   def get(self):
     error = self.request.get('error','') 
     comment = self.request.get_all('comment') 
-
-    #Create key
-    comment_key = ndb.Key('MainPage','message_page')
-
     message_page = Message(comment='')
-    message_query = Message.query(ancestor=comment_key).order(Message.date)
-
+   
     query=Message.query().order(Message.date)
     message_list = query.fetch()
 
@@ -46,17 +41,11 @@ class MainPage(Handler):
  
   def post(self):
 
-    pull_posts=5
-    query=Message.query()
-    page_comments = query.fetch(pull_posts)
-
-    
     comment = self.request.get('comment')
-    #
- 
+   
 
-    # if either of the fields (link or comment) is blank
-    if comment:
+    # if comment is blank or only spaces are entered- error
+    if comment.strip():
         message_page = Message(comment=comment)
         message_page.content = self.request.get('comment')
         message_page.put()

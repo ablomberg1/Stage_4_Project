@@ -3,6 +3,8 @@
 {% block content %}
 
 <br>
+<span class="error" style="color: red" >{{ error }}</span>
+<br>
 
 <form method="post" action="/">  
 	<h3>Please leave feedback on the notes</h3>
@@ -14,8 +16,6 @@
 	{% endif %}
 	<input type='submit'>
 
-	<br>
-	<span class="error" style="color: red">{{ error }}</span>
 
 	{% if comment %}
 		<h2>Comments</h2> 
