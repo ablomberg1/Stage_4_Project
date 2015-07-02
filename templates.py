@@ -48,7 +48,7 @@ class MainPage(Handler):
         message_page = Message(comment=comment)
         message_page.content = self.request.get('comment')
         message_page.put()
-        # time.sleep(.1)
+        time.sleep(.1)
         self.redirect('/')        
     else:
       self.redirect('/?error=Please leave a comment!') 
