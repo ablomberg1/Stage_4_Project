@@ -9,7 +9,7 @@
 <form method="post" action="/">  
 	<h3>Please leave feedback on the notes</h3>
 	<input type="text" name="comment">
-	{% if comments %}
+	{% if comment %}
 		{% for comment in comments %}
 		<input type="hidden" name="comment" value="{{ comment }}">
 		{% endfor %}

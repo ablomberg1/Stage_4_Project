@@ -30,8 +30,6 @@ class Handler(webapp2.RequestHandler):
 class MainPage(Handler):
   def get(self):
     error = self.request.get('error','') 
-    comment = self.request.get_all('comment') 
-    message_page = Message(comment='')
    
     query=Message.query().order(Message.date)
     message_list = query.fetch()
@@ -46,11 +44,11 @@ class MainPage(Handler):
 
     # if comment is blank or only spaces are entered- error
     if comment.strip():
+        import time
         message_page = Message(comment=comment)
         message_page.content = self.request.get('comment')
         message_page.put()
-        import time
-        time.sleep(.1)
+        # time.sleep(.1)
         self.redirect('/')        
     else:
       self.redirect('/?error=Please leave a comment!') 
